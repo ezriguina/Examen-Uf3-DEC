@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Examen UF3</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 40px 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+  
+    form {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0px 20px rgba(0, 0, 0, 0.1);
+    }
+  
+    label {
+      display: block;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+  
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+  
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+  
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      margin-top: 20px;
+      width: 100%;
+    }
+  
+    button:hover {
+      background-color: #0056b3;
+    }
+  
+    .error {
+      color: #e63946;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+  
+    @media (max-width: 600px) {
+      form {
+        padding: 20px;
+      }
+    }
+  </style>
+  
+</head>
+<body>
+  <form id="form">
+    <label>Nom complet
+      <input type="text" id="full_name" />
+      <div class="error" id="error_full_name"></div>
+    </label>
+
+    <label>Nom d'usuari
+      <input type="text" id="username" />
+      <div class="error" id="error_username"></div>
+    </label>
+
+    <label>Correu electrònic
+      <input type="email" id="email" />
+      <div class="error" id="error_email"></div>
+    </label>
+
+    <label>Telèfon mòbil
+      <input type="text" id="phone" />
+      <div class="error" id="error_phone"></div>
+    </label>
+
+    <label>Data de naixement
+      <input type="date" id="birthdate" />
+      <div class="error" id="error_birthdate"></div>
+    </label>
+
+    <label>Codi postal
+      <input type="text" id="postal_code" />
+      <div class="error" id="error_postal_code"></div>
+    </label>
+
+    <label>Adreça
+      <input type="text" id="address" />
+      <div class="error" id="error_address"></div>
+    </label>
+
+    <label>Contrasenya
+      <input type="password" id="password" />
+      <div class="error" id="error_password"></div>
+    </label>
+
+    <label>Confirmar contrasenya
+      <input type="password" id="confirm_password" />
+      <div class="error" id="error_confirm_password"></div>
+    </label>
+
+    <label>
+      <input type="checkbox" id="terms" />
+      Accepto els termes i condicions
+      <div class="error" id="error_terms"></div>
+    </label>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+<script>
+    
+document.getElementById("form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  let hasError = false;
+
+  function showError(id, msg) {
+    document.getElementById("error_" + id).textContent = msg;
+    hasError = true;
+  }
+
+  function clearError(id) {
+    document.getElementById("error_" + id).textContent = "";
+  }
+
+  const fullName = document.getElementById("full_name").value.trim();
+  const nameRegex = /^[A-Za-zÀ-ÿ\s]+$/;
+  if (!fullName) showError("full_name", "Aquest camp és obligatori.");
+  else if (!nameRegex.test(fullName)) showError("full_name", "El nom només pot contenir lletres i espais.");
+  else clearError("full_name");
+
+
+  const username = document.getElementById("username").value.trim();
+  const usernameRegex = /^[A-Za-z][A-Za-z0-9_.]{4,14}$/;
+  if (!username) showError("username", "Aquest camp és obligatori.");
+  else if (!usernameRegex.test(username)) showError("username", "El nom d'usuari ha de començar per una lletra i tenir entre 5 i 15 caràcters.");
+  else clearError("username");
+
+  const email = document.getElementById("email").value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) showError("email", "Aquest camp és obligatori.");
+  else if (!emailRegex.test(email)) showError("email", "Introdueix un correu electrònic vàlid.");
+  else clearError("email");
+
+  const phone = document.getElementById("phone").value.trim();
+  const phoneRegex = /^(?:\+34)?\d{9}$/;
+  if (!phone) showError("phone", "Aquest camp és obligatori.");
+  else if (!phoneRegex.test(phone)) showError("phone", "Introdueix un número de telèfon vàlid.");
+  else clearError("phone");
+
+  const birthdate = document.getElementById("birthdate").value;
+  if (!birthdate) showError("birthdate", "Aquest camp és obligatori.");
+  else {
+    const age = new Date().getFullYear() - new Date(birthdate).getFullYear();
+    if (age < 18) showError("birthdate", "Has de ser major d’edat per poder registrar-te.");
+    else clearError("birthdate");
+  }
+
+  const postal = document.getElementById("postal_code").value.trim();
+  if (!postal) showError("postal_code", "Aquest camp és obligatori.");
+  else if (!/^\d{5}$/.test(postal)) showError("postal_code", "Introdueix un codi postal vàlid de 5 xifres.");
+  else clearError("postal_code");
+
+  const address = document.getElementById("address").value.trim();
+  if (!address) showError("address", "L'adreça no pot estar buida.");
+  else if (address.length > 100) showError("address", "L'adreça no pot superar els 100 caràcters.");
+  else clearError("address");
+
+  const password = document.getElementById("password").value;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?!.*\s).{8,}$/;
+  if (!password) showError("password", "Aquest camp és obligatori.");
+  else if (!passwordRegex.test(password)) showError("password", "La contrasenya ha de tenir almenys 8 caràcters, amb majúscules, minúscules, números i símbols especials.");
+  else clearError("password");
+
+  const confirmPassword = document.getElementById("confirm_password").value;
+  if (!confirmPassword) showError("confirm_password", "Aquest camp és obligatori.");
+  else if (password !== confirmPassword) showError("confirm_password", "Les contrasenyes no coincideixen.");
+  else clearError("confirm_password");
+
+  const terms = document.getElementById("terms").checked;
+  if (!terms) showError("terms", "Has d'acceptar els termes i condicions per continuar.");
+  else clearError("terms");
+
+  // SI TOT ÉS CORRECTE
+  if (!hasError) {
+    alert("Formulari enviat correctament.");
+    // Aquí pots guardar dades, redirigir, etc.
+  }
+});
+
+</script>
+</html>

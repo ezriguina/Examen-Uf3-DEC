@@ -218,6 +218,90 @@ document.getElementById("form").addEventListener("submit", function (e) {
     window.location.href = "/dash.html"; 
   }
 });
+function setupRealTimeValidation() {
+  const validations = {
+    full_name: () => {
+      const val = document.getElementById("full_name").value.trim();
+      const regex = /^[A-Za-zÀ-ÿ\s]+$/;
+      if (!val) showError("full_name", "Aquest camp és obligatori.");
+      else if (!regex.test(val)) showError("full_name", "El nom només pot contenir lletres i espais.");
+      else clearError("full_name");
+    },
+    username: () => {
+      const val = document.getElementById("username").value.trim();
+      const regex = /^[A-Za-z][A-Za-z0-9_.]{4,14}$/;
+      if (!val) showError("username", "Aquest camp és obligatori.");
+      else if (!regex.test(val)) showError("username", "Ha de tenir entre 5 i 15 caràcters i començar per una lletra.");
+      else clearError("username");
+    },
+    email: () => {
+      const val = document.getElementById("email").value.trim();
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!val) showError("email", "Aquest camp és obligatori.");
+      else if (!regex.test(val)) showError("email", "Introdueix un correu electrònic vàlid.");
+      else clearError("email");
+    },
+    phone: () => {
+      const val = document.getElementById("phone").value.trim();
+      const regex = /^(?:\+34)?\d{9}$/;
+      if (!val) showError("phone", "Aquest camp és obligatori.");
+      else if (!regex.test(val)) showError("phone", "Telèfon no vàlid.");
+      else clearError("phone");
+    },
+    birthdate: () => {
+      const val = document.getElementById("birthdate").value;
+      if (!val) showError("birthdate", "Aquest camp és obligatori.");
+      else {
+        const age = new Date().getFullYear() - new Date(val).getFullYear();
+        if (age < 18) showError("birthdate", "Has de ser major d’edat.");
+        else clearError("birthdate");
+      }
+    },
+    postal_code: () => {
+      const val = document.getElementById("postal_code").value.trim();
+      if (!val) showError("postal_code", "Aquest camp és obligatori.");
+      else if (!/^\d{5}$/.test(val)) showError("postal_code", "Codi postal no vàlid.");
+      else clearError("postal_code");
+    },
+    address: () => {
+      const val = document.getElementById("address").value.trim();
+      if (!val) showError("address", "Aquest camp és obligatori.");
+      else if (val.length > 100) showError("address", "Massa llarg.");
+      else clearError("address");
+    },
+    password: () => {
+      const val = document.getElementById("password").value;
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])(?!.*\s).{8,}$/;
+      if (!val) showError("password", "Aquest camp és obligatori.");
+      else if (!regex.test(val)) showError("password", "Contrasenya massa dèbil.");
+      else clearError("password");
+    },
+    confirm_password: () => {
+      const val = document.getElementById("confirm_password").value;
+      const password = document.getElementById("password").value;
+      if (!val) showError("confirm_password", "Aquest camp és obligatori.");
+      else if (val !== password) showError("confirm_password", "No coincideix amb la contrasenya.");
+      else clearError("confirm_password");
+    },
+    terms: () => {
+      const checked = document.getElementById("terms").checked;
+      if (!checked) showError("terms", "Cal acceptar els termes.");
+      else clearError("terms");
+    }
+  };
+
+  // Assignar esdeveniments d'entrada o canvi
+  for (const field in validations) {
+    const el = document.getElementById(field);
+    if (el) {
+      const eventType = el.type === "checkbox" ? "change" : "input";
+      el.addEventListener(eventType, validations[field]);
+    }
+  }
+}
+
+setupRealTimeValidation();
+
 
 </script>
 </html>

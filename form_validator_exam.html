@@ -211,10 +211,11 @@ document.getElementById("form").addEventListener("submit", function (e) {
   if (!terms) showError("terms", "Has d'acceptar els termes i condicions per continuar.");
   else clearError("terms");
 
-  // SI TOT ÉS CORRECTE
   if (!hasError) {
     alert("Formulari enviat correctament.");
-    // Aquí pots guardar dades, redirigir, etc.
+    // redirect to another page or perform any other action
+
+    window.location.href = "/dash.html"; 
   }
 });
 

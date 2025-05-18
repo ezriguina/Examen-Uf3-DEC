@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar Sesión</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    form { border: 1px solid #ccc; padding: 15px; border-radius: 8px; max-width: 400px; }
+    input { display: block; margin: 10px 0; padding: 8px; width: 95%; }
+    button { padding: 10px 15px; }
+    .message { margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>Iniciar Sesión</h2>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Correo electrónico" required>
+    <input type="tel" id="phone" placeholder="Teléfono" required>
+    <button type="submit">Entrar</button>
+    <div class="message" id="loginMessage"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const emailField = document.getElementById("email");
+    const phoneField = document.getElementById("phone");
+    const loginMessage = document.getElementById("loginMessage");
+
+    // Login automático si hay datos guardados
+    const pendingLogin = JSON.parse(localStorage.getItem("pendingLogin"));
+    if (pendingLogin) {
+      emailField.value = pendingLogin.email;
+      phoneField.value = pendingLogin.phone;
+      localStorage.removeItem("pendingLogin");
+      form.dispatchEvent(new Event('submit')); // login automático
+    }
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = emailField.value.trim();
+      const phone = phoneField.value.trim();
+
+      const users = JSON.parse(localStorage.getItem("userData")) || [];
+      const match = users.find(user => user.email === email && user.phone === phone);
+
+      if (match) {
+        loginMessage.textContent = "Inicio de sesión exitoso.";
+        loginMessage.style.color = "green";
+        // Aquí podrías redirigir al dashboard, por ejemplo
+         window.location.href = "https://pacman-zeta-tan.vercel.app/";
+      } else {
+        loginMessage.textContent = "Correo o teléfono incorrecto.";
+        loginMessage.style.color = "red";
+      }
+    });
+  </script>
+
+</body>
+</html>

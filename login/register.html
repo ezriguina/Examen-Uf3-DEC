@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registre Usuari</title>
+
+  <!-- W3.CSS -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+  <!-- Iconos (opcional) -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <style>
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      display: block;
+      min-height: 18px;
+    }
+
+    .w3-card {
+      margin-top: 40px;
+    }
+
+    .w3-button {
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="w3-light-grey">
+
+  <div class="w3-container w3-card w3-white w3-padding w3-round-large" style="max-width: 500px; margin:auto;">
+    <h2 class="w3-center w3-text-teal">Formulari de Registre</h2>
+
+    <form id="registerForm" novalidate>
+      <label class="w3-text-grey">Nom</label>
+      <input class="w3-input w3-border" type="text" id="name" placeholder="Nom">
+      <span class="error" id="error-name"></span>
+
+      <label class="w3-text-grey">Cognoms</label>
+      <input class="w3-input w3-border" type="text" id="surname" placeholder="Cognoms">
+      <span class="error" id="error-surname"></span>
+
+      <label class="w3-text-grey">Data de naixement</label>
+      <input class="w3-input w3-border" type="date" id="birth">
+      <span class="error" id="error-birth"></span>
+
+      <label class="w3-text-grey">Correu electrònic</label>
+      <input class="w3-input w3-border" type="email" id="email" placeholder="Correu electrònic">
+      <span class="error" id="error-email"></span>
+
+      <label class="w3-text-grey">Contrasenya</label>
+      <input class="w3-input w3-border" type="password" id="password" placeholder="Contrasenya">
+      <span class="error" id="error-pass"></span>
+
+      <button class="w3-button w3-teal w3-margin-top" type="submit">Registrar-se</button>
+    </form>
+
+    <p class="w3-center w3-small w3-margin-top">
+      Ja tens un compte? <a href="login.html">Inicia sessió</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', e => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const surname = document.getElementById('surname').value.trim();
+      const birth = document.getElementById('birth').value;
+      const email = document.getElementById('email').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      const errorName = document.getElementById('error-name');
+      const errorSurname = document.getElementById('error-surname');
+      const errorBirth = document.getElementById('error-birth');
+      const errorEmail = document.getElementById('error-email');
+      const errorPass = document.getElementById('error-pass');
+
+      // Reset errors
+      errorName.textContent = '';
+      errorSurname.textContent = '';
+      errorBirth.textContent = '';
+      errorEmail.textContent = '';
+      errorPass.textContent = '';
+
+      const nameRegex = /^[A-Za-zÀ-ÿ\s'-]{2,}$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+
+      let valid = true;
+
+      if (!name) {
+        errorName.textContent = "El nom és obligatori.";
+        valid = false;
+      } else if (!nameRegex.test(name)) {
+        errorName.textContent = "Nom invàlid. Només lletres i mínim 2 caràcters.";
+        valid = false;
+      }
+
+      if (!surname) {
+        errorSurname.textContent = "Els cognoms són obligatoris.";
+        valid = false;
+      } else if (!nameRegex.test(surname)) {
+        errorSurname.textContent = "Cognoms invàlids. Només lletres i mínim 2 caràcters.";
+        valid = false;
+      }
+
+      if (!birth) {
+        errorBirth.textContent = "La data de naixement és obligatòria.";
+        valid = false;
+      } else {
+        const birthDate = new Date(birth);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        if (age < 16) {
+          errorBirth.textContent = "Has de tenir almenys 16 anys.";
+          valid = false;
+        }
+      }
+
+      if (!email) {
+        errorEmail.textContent = "El correu electrònic és obligatori.";
+        valid = false;
+      } else if (!emailRegex.test(email)) {
+        errorEmail.textContent = "Format de correu electrònic incorrecte.";
+        valid = false;
+      }
+
+      if (!pass) {
+        errorPass.textContent = "La contrasenya és obligatòria.";
+        valid = false;
+      } else if (!passRegex.test(pass)) {
+        errorPass.textContent = "Contrasenya invàlida. Mínim 6 caràcters, almenys una lletra i un número.";
+        valid = false;
+      }
+
+      if (valid) {
+        const user = { name, surname, birth, email, pass };
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const exists = users.some(u => u.name === name || u.email === email);
+        if (exists) {
+          errorEmail.textContent = "Aquest nom d'usuari o correu ja està registrat.";
+          return;
+        }
+
+        users.push(user);
+        localStorage.setItem('users', JSON.stringify(users));
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+</body>
+</html>

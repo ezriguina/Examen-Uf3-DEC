@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información - Pac-Man</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Información del Juego</h1>
+  </header>
+ <h1><a href="../index.html" style="text-decoration: none;"> << Volver a la pagina principal </a></h1>
+  <section class="content">
+    <p><strong>Navegador utilizado:</strong> <span id="browser-name"></span></p>
+    <p><strong>Versión del Navegador:</strong> <span id="browser-version"></span></p>
+    <p><strong>Sistema Operativo:</strong> <span id="platform"></span></p>
+    <p><strong>Fecha de última modificación:</strong> <span id="last-modified"></span></p>
+    <p><strong>Idioma:</strong> <span id="language"></span></p>
+    <p><strong>URL actual:</strong> <span id="hostname"></span></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Joc Pac-Man - Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    document.getElementById('browser-name').textContent = navigator.userAgent;
+    document.getElementById('browser-version').textContent = navigator.appVersion;
+    document.getElementById('platform').textContent = navigator.platform;
+    document.getElementById('last-modified').textContent = document.lastModified;
+    document.getElementById('language').textContent = navigator.language;
+    document.getElementById('hostname').textContent = window.location.href;
+  </script>
+
+</body>
+</html>
